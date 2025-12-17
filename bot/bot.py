@@ -1,7 +1,6 @@
 import telebot
 import logging
 from .handlers import MessageHandlers
-from .keyboards import Keyboards
 from config import Config
 
 logger = logging.getLogger(__name__)
