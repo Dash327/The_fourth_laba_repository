@@ -41,7 +41,7 @@ class MessageHandlers:
         except Exception as e:
             logger.error(f"Ошибка в handle_start: {e}")
             self.bot.send_message(
-                message.chat.id, "⚠️ Произошла ошибка. Попробуйте позже."
+                message.chat.id, "Произошла ошибка. Попробуйте позже."
             )
 
     def handle_rate(self, message):
@@ -51,10 +51,10 @@ class MessageHandlers:
             self.bot.send_message(message.chat.id, response_text, parse_mode="HTML")
 
         except APIError as e:
-            self.bot.send_message(message.chat.id, f"❌ Ошибка API: {e}")
+            self.bot.send_message(message.chat.id, f"Ошибка API: {e}")
         except Exception as e:
             logger.error(f"Ошибка в handle_rate: {e}")
-            self.bot.send_message(message.chat.id, "⚠️ Не удалось получить курсы валют")
+            self.bot.send_message(message.chat.id, "Не удалось получить курсы валют")
 
     def handle_archive(self, message):
         try:
