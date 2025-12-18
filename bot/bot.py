@@ -4,6 +4,7 @@ from bot.keybords import get_main_keyboard
 import logging
 from .handlers import MessageHandlers
 from config import Config
+from bot.keybords import Keyboards
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ class CurrencyBot:
     def __init__(self, token):
         self.bot = telebot.TeleBot(token)
         self.handlers = MessageHandlers(self.bot)
-        self.keyboards = Keyboфrds()
+        self.keyboards = Keyboards()
         self.setup_handlers()
 
     def setup_handlers(self):
