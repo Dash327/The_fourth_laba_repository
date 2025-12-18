@@ -2,8 +2,13 @@ import requests
 import json
 from datetime import datetime
 from typing import Dict, Optional
-from utils.exceptions import APIError
 from config import Config
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+from utils.exception import APIError
 
 
 class CurrencyAPI:
