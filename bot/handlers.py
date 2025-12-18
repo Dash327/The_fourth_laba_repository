@@ -1,9 +1,12 @@
 import logging
 from api.currency_api import CurrencyAPI
-from database.repository import UserRepository
-from utils.validators import DateValidator
-from utils.formatters import format_currency_response
-from utils.exceptions import APIError, ValidationError
+from utils.utils import DateValidator
+from utils.exception import ValidationError, APIError
+from user_repository import UserRepository
+from utils.utils import format_currency_response
+
+
+from utils.utils import validate_currency_code, validate_amount
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +52,6 @@ class MessageHandlers:
             rates = self.api.get_current_rates()
             response_text = format_currency_response(rates)
             self.bot.send_message(message.chat.id, response_text, parse_mode="HTML")
-
         except APIError as e:
             self.bot.send_message(message.chat.id, f"Ошибка API: {e}")
         except Exception as e:
@@ -60,30 +62,27 @@ class MessageHandlers:
         try:
             self.bot.send_message(
                 message.chat.id,
-                "📅 Введите дату в формате ДД.ММ.ГГГГ (например, 15.12.2023):",
+                "Введите дату в формате ДД.ММ.ГГГГ (например, 15.12.2023):",
             )
             self.bot.register_next_step_handler(message, self._process_archive_date)
-
         except Exception as e:
             logger.error(f"Ошибка в handle_archive: {e}")
+            self.bot.send_message(message.chat.id, "Не удалось запросить дату")
 
     def _process_archive_date(self, message):
         try:
             date_str = message.text.strip()
-
             if not self.validator.is_valid_date(date_str):
                 raise ValidationError("Неверный формат даты. Используйте ДД.ММ.ГГГГ")
 
-            # Получение курса на дату
             rates = self.api.get_historical_rates(date_str)
             response_text = format_currency_response(rates, date_str)
-
             self.bot.send_message(message.chat.id, response_text, parse_mode="HTML")
 
         except ValidationError as e:
-            self.bot.send_message(message.chat.id, f"{e}")
+            self.bot.send_message(message.chat.id, str(e))
         except APIError as e:
             self.bot.send_message(message.chat.id, f"Ошибка API: {e}")
         except Exception as e:
             logger.error(f"Ошибка в _process_archive_date: {e}")
-            self.bot.send_message(message.chat.id, "Не удалось получить данные")
+            self.bot.send_message(message.chat.id, "Не удалось получить данные за дату")
