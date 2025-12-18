@@ -22,3 +22,9 @@ def validate_amount(amount: str) -> bool:
         return True
     except ValueError:
         return False
+
+
+def format_currency_response(
+    amount: float, from_currency: str, to_currency: str, rate: float, result: float
+) -> str:
+    return f"{amount} {from_currency} = {result:.2f} {to_currency} (курс: {rate:.4f})"
